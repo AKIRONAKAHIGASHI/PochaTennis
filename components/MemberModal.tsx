@@ -109,7 +109,7 @@ const MemberModal: React.FC<MemberModalProps> = ({ isOpen, onClose, availableMem
             <ModalContent>
                 <ModalHeader>メンバーを選択</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody>
+                <ModalBody maxHeight="60vh" overflowY="auto">
                     <Box mb={6}>
                         <Heading size="md" mb={4}>メンバー招待候補</Heading>
                         {renderListContent(
