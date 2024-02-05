@@ -155,7 +155,8 @@ export const deleteSchedule = async (scheduleId: number) => {
 export const fetchMembers = async (): Promise<Member[] | null> => {
   let { data: members, error } = await supabase
     .from('m_user')
-    .select('*');
+    .select('*')
+    .order('id');
 
   if (error) {
     console.error('Error fetching members', error);
