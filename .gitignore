@@ -3,3 +3,5 @@
 
 # Next.js のビルド出力
 .next/
+
+node_modules/
