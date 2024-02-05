@@ -210,7 +210,7 @@ const Schedule = () => {
                                                 {schedule.members && schedule.members.length <= 4 ? (
                                                     <Flex alignItems="center" ml={2}>
                                                         <Text fontWeight="bold" >{`${schedule.members.length}人`}</Text>
-                                                        {/* <WarningTwoIcon ml={1} color="red.500" /> */}
+                                                        {schedule.event_type !== 2 && <WarningTwoIcon ml={1} color="red.500" />}
                                                     </Flex>
                                                 ) : (
                                                     <Text ml={2} fontWeight="bold" >{`${schedule.members?.length || 0}人`}</Text>
