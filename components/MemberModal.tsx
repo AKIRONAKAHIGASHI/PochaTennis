@@ -19,6 +19,20 @@ interface MemberCardProps {
     onClick: () => void;
 }
 
+export const getBackgroundColor = (gender: number) => {
+    switch (gender) {
+        case 1:
+            return "blue.400"; // 男性
+        case 2:
+            return "red.400"; // 女性
+        case 3:
+            return "yellow.400"; // 不明
+        default:
+            return "gray.400"; // 性別が指定されていない場合
+    }
+};
+
+
 const MemberCard: React.FC<MemberCardProps> = ({ member, onClick }) => {
     return (
         <Button
@@ -32,7 +46,8 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onClick }) => {
             w="100%" // ボタンの幅を増やす
             h="60px" // 高さは調整済み
             fontSize="sm" // フォントサイズを小さく設定
-            _hover={{ bg: "green.200" }}
+            backgroundColor={getBackgroundColor(member.gender)}
+            _hover={{ backgroundColor: getBackgroundColor(member.gender) }}
         >
             <Text textAlign="center">{member.name}</Text>
         </Button>
@@ -113,7 +128,7 @@ const MemberModal: React.FC<MemberModalProps> = ({ isOpen, onClose, availableMem
                 </ModalBody>
                 <ModalFooter>
                     <Button colorScheme="green" mr={3} onClick={handleOk}>OK</Button>
-                    <Button colorScheme="red" onClick={handleCancel}>キャンセル</Button>
+                    <Button colorScheme="gray" onClick={handleCancel}>キャンセル</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

@@ -155,9 +155,17 @@ export const deleteSchedule = async (scheduleId: number) => {
 export const fetchMembers = async (): Promise<Member[] | null> => {
   let { data: members, error } = await supabase
     .from('m_user')
-    .select('*')
-    .order('id');
+    .select('*');
 
+  if (members) {
+    members.sort((a, b) => {
+      if (a.gender === b.gender) {
+        return a.id - b.id; // genderが同じ場合は、idで昇順ソート
+      } else {
+        return b.gender - a.gender; // genderで降順ソート
+      }
+    });
+  }
   if (error) {
     console.error('Error fetching members', error);
     return null;

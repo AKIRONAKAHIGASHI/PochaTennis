@@ -10,4 +10,5 @@ export interface Schedule {
 export interface Member {
     id: number;
     name: string;
+    gender: number;
 }

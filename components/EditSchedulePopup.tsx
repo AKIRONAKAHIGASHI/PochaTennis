@@ -20,7 +20,7 @@ import { Schedule } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
 import { Member } from '@/lib/types';
 import { fetchMembers } from '@/lib/supabase';
-import MemberModal from './MemberModal';
+import MemberModal, { getBackgroundColor } from './MemberModal';
 import { formatTime } from '../utils/format';
 
 interface EditSchedulePopupProps {
@@ -38,6 +38,7 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
   const [availableMembers, setAvailableMembers] = useState<Member[]>([]);
   const { isOpen, onOpen, onClose: onMemberModalClose } = useDisclosure();
   const toast = useToast();
+  const initialRef = useRef(null);
 
   const modalBodyRef = useRef<HTMLDivElement>(null);
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([]);
@@ -115,7 +116,7 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
   };
 
   return (
-    <Modal isOpen={true} onClose={onClose} size="xl">
+    <Modal isOpen={true} onClose={onClose} size="xl" initialFocusRef={initialRef}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>スケジュール編集</ModalHeader>
@@ -125,7 +126,7 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
 
           <FormControl>
             <FormLabel>タイトル</FormLabel>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} ref={initialRef} />
           </FormControl>
           <FormControl mt={4}>
             <FormLabel>イベントタイプ</FormLabel>
@@ -161,7 +162,7 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
             </Flex>
             <Flex wrap="wrap" mt={4}>
               {selectedMembers.map(member => (
-                <Box key={member.id} p={2} m={1} bg="gray.200" borderRadius="md" boxShadow="sm">
+                <Box key={member.id} p={2} m={1} fontWeight="bold" backgroundColor={getBackgroundColor(member.gender)} color="white" borderRadius="md" boxShadow="sm">
                   <Text fontSize="sm">{member.name}</Text>
                 </Box>
               ))}

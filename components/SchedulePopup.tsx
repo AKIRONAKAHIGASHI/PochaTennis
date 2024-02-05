@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, FormControl, FormLabel, FormErrorMessage, Input, ModalFooter, Button, useDisclosure, Flex, RadioGroup, Radio, Stack, Box, Text, Divider } from '@chakra-ui/react';
 import { useToast } from '@chakra-ui/react';
-import MemberModal from './MemberModal';
+import MemberModal, { getBackgroundColor } from './MemberModal';
 import { Member } from '@/lib/types';
 import { fetchMembers } from '@/lib/supabase';
 
@@ -19,6 +19,7 @@ const SchedulePopup: React.FC<SchedulePopupProps> = ({ onClose, onSave }) => {
     const [selectedMembers, setSelectedMembers] = useState<Member[]>([]);
     const { isOpen, onOpen, onClose: onMemberModalClose } = useDisclosure();
     const [titleError, setTitleError] = useState('');
+    const initialRef = useRef(null);
 
     const toast = useToast();
 
@@ -78,7 +79,7 @@ const SchedulePopup: React.FC<SchedulePopupProps> = ({ onClose, onSave }) => {
     };
 
     return (
-        <Modal isOpen={true} onClose={onClose} size="xl">
+        <Modal isOpen={true} onClose={onClose} size="xl" initialFocusRef={initialRef}>
             <ModalOverlay />
             <ModalContent my={10} mx={5}>
                 <ModalHeader>スケジュールを追加</ModalHeader>
@@ -87,7 +88,7 @@ const SchedulePopup: React.FC<SchedulePopupProps> = ({ onClose, onSave }) => {
                 <ModalBody maxHeight="60vh" overflowY="auto">
                     <FormControl isInvalid={!!titleError}>
                         <FormLabel htmlFor="title-input">タイトル</FormLabel>
-                        <Input id="title-input" value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <Input id="title-input" value={title} onChange={(e) => setTitle(e.target.value)} ref={initialRef} />
                         {titleError && <FormErrorMessage>{titleError}</FormErrorMessage>}
                     </FormControl>
                     <FormControl mt={4}>
@@ -124,7 +125,7 @@ const SchedulePopup: React.FC<SchedulePopupProps> = ({ onClose, onSave }) => {
                         </Flex>
                         <Flex wrap="wrap" mt={4}>
                             {selectedMembers.map(member => (
-                                <Box key={member.id} p={2} m={1} bg="gray.200" borderRadius="md" boxShadow="sm">
+                                <Box key={member.id} p={2} m={1} fontWeight="bold" backgroundColor={getBackgroundColor(member.gender)} color="white" borderRadius="md" boxShadow="sm">
                                     <Text fontSize="sm">{member.name}</Text>
                                 </Box>
                             ))}
