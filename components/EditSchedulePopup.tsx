@@ -119,14 +119,14 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
     <Modal isOpen={true} onClose={onClose} size="xl" initialFocusRef={initialRef}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>スケジュール編集</ModalHeader>
+        <ModalHeader ref={initialRef}>スケジュール編集</ModalHeader>
         <Divider />
         <ModalCloseButton />
         <ModalBody ref={modalBodyRef} maxHeight="60vh" overflowY="auto">
 
           <FormControl>
             <FormLabel>タイトル</FormLabel>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} ref={initialRef} />
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
           </FormControl>
           <FormControl mt={4}>
             <FormLabel>イベントタイプ</FormLabel>

@@ -82,13 +82,13 @@ const SchedulePopup: React.FC<SchedulePopupProps> = ({ onClose, onSave }) => {
         <Modal isOpen={true} onClose={onClose} size="xl" initialFocusRef={initialRef}>
             <ModalOverlay />
             <ModalContent my={10} mx={5}>
-                <ModalHeader>スケジュールを追加</ModalHeader>
+                <ModalHeader ref={initialRef} >スケジュールを追加</ModalHeader>
                 <Divider />
                 <ModalCloseButton />
                 <ModalBody maxHeight="60vh" overflowY="auto">
                     <FormControl isInvalid={!!titleError}>
                         <FormLabel htmlFor="title-input">タイトル</FormLabel>
-                        <Input id="title-input" value={title} onChange={(e) => setTitle(e.target.value)} ref={initialRef} />
+                        <Input id="title-input" value={title} onChange={(e) => setTitle(e.target.value)} />
                         {titleError && <FormErrorMessage>{titleError}</FormErrorMessage>}
                     </FormControl>
                     <FormControl mt={4}>
