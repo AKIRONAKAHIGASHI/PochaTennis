@@ -1,0 +1,5 @@
+# .env ファイル
+.env.local
+
+# Next.js のビルド出力
+.next/
