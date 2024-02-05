@@ -139,6 +139,7 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
           <FormControl mt={4}>
             <FormLabel>開始時間</FormLabel>
             <Input
+              textAlign="left"
               type="datetime-local"
               value={formatTime(startTime)}
               onChange={(e) => handleDateTimeChange(setStartTime, e.target.value)}
@@ -147,6 +148,7 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
           <FormControl mt={4}>
             <FormLabel>終了時間</FormLabel>
             <Input
+              textAlign="left"
               type="datetime-local"
               value={formatTime(endTime)}
               onChange={(e) => handleDateTimeChange(setEndTime, e.target.value)}
