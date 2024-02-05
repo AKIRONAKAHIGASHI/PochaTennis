@@ -122,7 +122,7 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
         <ModalHeader ref={initialRef}>スケジュール編集</ModalHeader>
         <Divider />
         <ModalCloseButton />
-        <ModalBody ref={modalBodyRef}>
+        <ModalBody ref={modalBodyRef} maxHeight="60vh" overflowY="auto">
 
           <FormControl>
             <FormLabel>タイトル</FormLabel>
