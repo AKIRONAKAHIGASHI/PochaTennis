@@ -17,14 +17,16 @@ export const fetchSchedulesWithMembers = async (year: number, month: number): Pr
   let { data: schedules, error } = await supabase
     .from('t_schedule')
     .select('*')
-    .gte('start_time', startDate.toISOString())
-    .lte('start_time', endDate.toISOString())
+    .gte('start_time', startDate.toLocaleDateString('en-CA') + " 00:00:00")
+    .lte('start_time', endDate.toLocaleDateString('en-CA') + " 23:59:59")
     .order('start_time', { ascending: true });
 
   if (error) {
     console.error('Error fetching schedules', error);
     return null;
   }
+  console.log(startDate.toLocaleDateString('en-CA'));
+  console.log(endDate.toLocaleDateString('en-CA'));
 
   if (!schedules) {
     return [];
