@@ -14,7 +14,7 @@ import {
   useDisclosure,
   Flex,
   Box,
-  Text, RadioGroup, Radio, Stack, Divider
+  Text, RadioGroup, Radio, Stack, Divider, Textarea
 } from '@chakra-ui/react';
 import { Schedule } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
@@ -26,7 +26,7 @@ import { formatTime } from '../utils/format';
 interface EditSchedulePopupProps {
   onClose: () => void;
   schedule: Schedule | undefined;
-  onSave: (scheduleId: number, newTitle: string, newEventType: number, newStartTime: string, newEndTime: string, newMembers: Member[]) => void;
+  onSave: (scheduleId: number, newTitle: string, newEventType: number, newStartTime: string, newEndTime: string, newMembers: Member[], remarks: string) => void;
 }
 
 const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule, onSave }) => {
@@ -34,6 +34,7 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
   const [startTime, setStartTime] = useState<Date | null>(schedule?.start_time ? new Date(schedule.start_time) : null);
   const [endTime, setEndTime] = useState<Date | null>(schedule?.end_time ? new Date(schedule.end_time) : null);
   const [eventType, setEventType] = useState('レンタル');
+  const [remarks, setRemarks] = useState(schedule?.remarks || '');
 
   const [availableMembers, setAvailableMembers] = useState<Member[]>([]);
   const { isOpen, onOpen, onClose: onMemberModalClose } = useDisclosure();
@@ -102,7 +103,7 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
       const eventTypeValue = eventType === 'レンタル' ? 1 : 2;
       const startTimeString = startTime ? formatTimeForServer(startTime) : '';
       const endTimeString = endTime ? formatTimeForServer(endTime) : '';
-      onSave(schedule.id, title, eventTypeValue, startTimeString, endTimeString, selectedMembers);
+      onSave(schedule.id, title, eventTypeValue, startTimeString, endTimeString, selectedMembers, remarks);
       onClose();
       toast({
         title: '完了',
@@ -167,6 +168,14 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
                 </Box>
               ))}
             </Flex>
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>備考</FormLabel>
+            <Textarea
+              placeholder="備考を入力"
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+            />
           </FormControl>
 
         </ModalBody>

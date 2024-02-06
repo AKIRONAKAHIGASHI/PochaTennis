@@ -46,11 +46,11 @@ const Schedule = () => {
         // setTemporarySelectedMembers([...selectedMembers]); // 現在の選択を一時的に保存
     }
 
-    const handleSaveNew = async (newTitle: string, newEventType: number, startDate: string, endDate: string, selectedMembers: Member[]) => {
+    const handleSaveNew = async (newTitle: string, newEventType: number, startDate: string, endDate: string, selectedMembers: Member[], remarks: string) => {
         const startDateTime = new Date(startDate);
         const endDateTime = new Date(endDate);
 
-        await newSchedule(newTitle, newEventType, startDateTime, endDateTime, selectedMembers);
+        await newSchedule(newTitle, newEventType, startDateTime, endDateTime, selectedMembers, remarks);
         fetchSchedulesWithMembers(currentYear, currentMonth).then(setSchedules);
         setIsNewOpenPopup(false);
     };
@@ -61,11 +61,11 @@ const Schedule = () => {
         setIsEditPopupOpen(true);
     };
 
-    const handleSaveEdit = async (scheduleId: number, newTitle: string, newEventType: number, newStartTime: string, newEndTime: string, newMembers: Member[]) => {
+    const handleSaveEdit = async (scheduleId: number, newTitle: string, newEventType: number, newStartTime: string, newEndTime: string, newMembers: Member[], remarks: string) => {
         const startDateTime = new Date(newStartTime);
         const endDateTime = new Date(newEndTime);
 
-        await updateSchedule(scheduleId, newTitle, newEventType, startDateTime, endDateTime, newMembers);
+        await updateSchedule(scheduleId, newTitle, newEventType, startDateTime, endDateTime, newMembers, remarks);
 
         fetchSchedulesWithMembers(currentYear, currentMonth).then(setSchedules);
     };

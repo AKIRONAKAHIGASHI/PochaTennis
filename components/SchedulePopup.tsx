@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, FormControl, FormLabel, FormErrorMessage, Input, ModalFooter, Button, useDisclosure, Flex, RadioGroup, Radio, Stack, Box, Text, Divider } from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, FormControl, FormLabel, FormErrorMessage, Input, ModalFooter, Button, useDisclosure, Flex, RadioGroup, Radio, Stack, Box, Text, Divider, Textarea } from '@chakra-ui/react';
 import { useToast } from '@chakra-ui/react';
 import MemberModal, { getBackgroundColor } from './MemberModal';
 import { Member } from '@/lib/types';
@@ -7,7 +7,7 @@ import { fetchMembers } from '@/lib/supabase';
 
 interface SchedulePopupProps {
     onClose: () => void;
-    onSave: (newTitle: string, eventType: number, startTime: string, endTime: string, members: Member[]) => void;
+    onSave: (newTitle: string, eventType: number, startTime: string, endTime: string, members: Member[], remarks: string) => void;
 };
 
 const SchedulePopup: React.FC<SchedulePopupProps> = ({ onClose, onSave }) => {
@@ -20,6 +20,10 @@ const SchedulePopup: React.FC<SchedulePopupProps> = ({ onClose, onSave }) => {
     const { isOpen, onOpen, onClose: onMemberModalClose } = useDisclosure();
     const [titleError, setTitleError] = useState('');
     const initialRef = useRef(null);
+    const [remarks, setRemarks] = useState('');
+    const [startDateError, setStartDateError] = useState('');
+    const [endDateError, setEndDateError] = useState('');
+
 
     const toast = useToast();
 
@@ -51,11 +55,23 @@ const SchedulePopup: React.FC<SchedulePopupProps> = ({ onClose, onSave }) => {
             setTitleError('タイトルは入力必須です');
             return;
         }
-
         setTitleError('');
+
+        if (!startTime.trim()) {
+            setStartDateError('開始日時は入力必須です');
+            return;
+        }
+        setStartDateError('');
+
+        if (!endTime.trim()) {
+            setEndDateError('終了日時は入力必須です');
+            return;
+        }
+        setEndDateError('');
+
         try {
             const eventTypeValue = eventType === 'レンタル' ? 1 : 2; // '
-            await onSave(title, eventTypeValue, startTime, endTime, selectedMembers);
+            await onSave(title, eventTypeValue, startTime, endTime, selectedMembers, remarks);
             toast({
                 title: '保存成功',
                 description: 'スケジュールがデータベースに保存されました。',
@@ -100,23 +116,27 @@ const SchedulePopup: React.FC<SchedulePopupProps> = ({ onClose, onSave }) => {
                             </Stack>
                         </RadioGroup>
                     </FormControl>
-                    <FormControl mt={4}>
+                    <FormControl mt={4} isInvalid={!!startDateError}>
                         <FormLabel htmlFor="starttime-input">開始時間</FormLabel>
                         <Input
                             id="starttime-input"
                             type="datetime-local"
                             value={startTime}
                             onChange={(e) => setStartTime(e.target.value)}
+                            onBlur={() => setStartDateError(!startTime.trim() ? '開始日時は入力必須です' : '')}
                         />
+                        {startDateError && <FormErrorMessage>{startDateError}</FormErrorMessage>}
                     </FormControl>
-                    <FormControl mt={4}>
+                    <FormControl mt={4} isInvalid={!!endDateError}>
                         <FormLabel htmlFor="endtime-input">終了時間</FormLabel>
                         <Input
                             id="endtime-input"
                             type="datetime-local"
                             value={endTime}
                             onChange={(e) => setEndTime(e.target.value)}
+                            onBlur={() => setEndDateError(!endTime.trim() ? '終了日時は入力必須です' : '')}
                         />
+                        {endDateError && <FormErrorMessage>{endDateError}</FormErrorMessage>}
                     </FormControl>
                     <FormControl my={8}>
                         <Flex alignItems="center" justifyContent="space-between">
@@ -130,6 +150,14 @@ const SchedulePopup: React.FC<SchedulePopupProps> = ({ onClose, onSave }) => {
                                 </Box>
                             ))}
                         </Flex>
+                    </FormControl>
+                    <FormControl mt={4}>
+                        <FormLabel>備考</FormLabel>
+                        <Textarea
+                            placeholder="備考を入力"
+                            value={remarks}
+                            onChange={(e) => setRemarks(e.target.value)}
+                        />
                     </FormControl>
                 </ModalBody>
                 <Divider />

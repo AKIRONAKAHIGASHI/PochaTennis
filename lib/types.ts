@@ -5,6 +5,7 @@ export interface Schedule {
     start_time: Date;
     end_time: Date;
     members: Member[];
+    remarks: string;
 };
 
 export interface Member {

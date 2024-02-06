@@ -25,8 +25,6 @@ export const fetchSchedulesWithMembers = async (year: number, month: number): Pr
     console.error('Error fetching schedules', error);
     return null;
   }
-  console.log(startDate.toLocaleDateString('en-CA'));
-  console.log(endDate.toLocaleDateString('en-CA'));
 
   if (!schedules) {
     return [];
@@ -96,7 +94,8 @@ export const updateSchedule = async (
   event_type: number,
   startDateTime: Date,
   endDateTime: Date,
-  members: Member[]
+  members: Member[],
+  remarks: string
 ) => {
   const { error: scheduleError } = await supabase
     .from('t_schedule')
@@ -104,7 +103,8 @@ export const updateSchedule = async (
       title: title,
       event_type,
       start_time: startDateTime,
-      end_time: endDateTime
+      end_time: endDateTime,
+      remarks: remarks
     })
     .eq('id', scheduleId);
 
@@ -181,7 +181,8 @@ export const newSchedule = async (
   eventType: number,
   startDateTime: Date,
   endDateTime: Date,
-  members: Member[]
+  members: Member[],
+  remarks: string
 ): Promise<void> => {
   const { data, error: schduleError } = (await supabase
     .from('t_schedule')
@@ -189,7 +190,8 @@ export const newSchedule = async (
       title,
       start_time: startDateTime.toISOString(),
       end_time: endDateTime.toISOString(),
-      event_type: eventType
+      event_type: eventType,
+      remarks: remarks
     }])
     .select('id')
     .single());
