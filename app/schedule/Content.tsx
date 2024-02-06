@@ -11,6 +11,8 @@ import { formatScheduleTime } from '../../utils/format';
 import { useToast } from '@chakra-ui/react';
 import { Member } from '@/lib/types';
 import { WarningTwoIcon } from '@chakra-ui/icons';
+import { format } from 'date-fns';
+import { ja } from 'date-fns/locale';
 
 const Schedule = () => {
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -121,6 +123,18 @@ const Schedule = () => {
         }
     };
 
+    function formatScheduleWithWeekday(start: Date, end: Date) {
+        // 開始日時と終了時間をフォーマット
+        // const startDate = new Date(start);
+        // const endDate = new Date(end);
+
+        // 日付と曜日、時間をフォーマット
+        const formattedStartDate = format(start, 'M/d(E) HH:mm', { locale: ja });
+        const formattedEndTime = format(end, 'HH:mm', { locale: ja });
+
+        return `${formattedStartDate} - ${formattedEndTime}`;
+    }
+
 
 
     useEffect(() => {
@@ -194,7 +208,7 @@ const Schedule = () => {
                                         <Box width="8px" height="100%" bg={getLabelColor(schedule.event_type)} position="absolute" left={0} top={0} borderRadius="lg" />
 
                                         {/* 日付表示 */}
-                                        <Text fontWeight="bold" mb={2} ml={5} _hover={{ cursor: "pointer" }} onClick={() => openEditPopup(schedule)}>{formatScheduleTime(schedule?.start_time, schedule?.end_time)}</Text>
+                                        <Text fontWeight="bold" mb={2} ml={5} _hover={{ cursor: "pointer" }} onClick={() => openEditPopup(schedule)}>{formatScheduleWithWeekday(schedule?.start_time, schedule?.end_time)}</Text>
 
                                         {/* タイトル表示 */}
                                         <Box mb={4} _hover={{ cursor: "pointer" }} onClick={() => openEditPopup(schedule)} pl={5}>
