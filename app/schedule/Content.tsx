@@ -124,9 +124,6 @@ const Schedule = () => {
     };
 
     function formatScheduleWithWeekday(start: Date, end: Date) {
-        // 開始日時と終了時間をフォーマット
-        // const startDate = new Date(start);
-        // const endDate = new Date(end);
 
         // 日付と曜日、時間をフォーマット
         const formattedStartDate = format(start, 'M/d(E) HH:mm', { locale: ja });
