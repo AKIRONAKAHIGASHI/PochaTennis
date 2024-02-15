@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Button, SimpleGrid, Box, Text, Icon, Heading, ModalFooter } from '@chakra-ui/react';
-import { AddIcon, CheckIcon } from '@chakra-ui/icons';
-import { IconType } from 'react-icons';
 import { Member } from '@/lib/types';
 
 type MemberModalProps = {
@@ -106,7 +104,7 @@ const MemberModal: React.FC<MemberModalProps> = ({ isOpen, onClose, availableMem
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="full" isCentered>
             <ModalOverlay />
-            <ModalContent my={10} mx={5}>
+            <ModalContent>
                 <ModalHeader>メンバーを選択</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody overflowY="auto">

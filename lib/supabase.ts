@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { Schedule, Member } from './types';
+import { Schedule, Member, Task } from './types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
@@ -9,6 +9,66 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+export const fetchTasks = async (): Promise<Task[] | null> => {
+  let { data: tasks, error } = await supabase
+    .from('t_task')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching tasks', error);
+    return null;
+  }
+
+  return tasks;
+};
+
+export const newTask = async (
+  content: string
+): Promise<void> => {
+  const { data, error: taskError } = (await supabase
+    .from('t_task')
+    .insert([{
+      content
+    }])
+    .single());
+
+  if (taskError) throw taskError;
+
+};
+
+export const updateTask = async (
+  taskId: number,
+  content: string
+) => {
+  const { error: taskError } = await supabase
+    .from('t_task')
+    .update({
+      content: content
+    })
+    .eq('id', taskId);
+
+  if (taskError) {
+    throw taskError;
+  }
+
+};
+
+
+export const deleteTask = async (taskId: number) => {
+  const { data, error } = await supabase
+    .from('t_task')
+    .delete()
+    .eq('id', taskId);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
+
 
 export const fetchSchedulesWithMembers = async (year: number, month: number): Promise<Schedule[] | null> => {
   const startDate = new Date(year, month - 1, 1);
@@ -69,24 +129,6 @@ export const db_fetchScheduleMembers = async (scheduleId: number) => {
 
   return members;
 };
-
-
-// export const newSchedule = async (title: string, startDateTime: Date, endDateTime: Date) => {
-//   const { data, error } = await supabase
-//     .from('t_schedule')
-//     .insert([{
-//       title: title,
-//       start_time: startDateTime.toISOString(),
-//       end_time: endDateTime.toISOString()
-//     }]);
-
-//   if (error) {
-//     throw error;
-//   }
-
-//   return data;
-// }
-
 
 export const updateSchedule = async (
   scheduleId: number,

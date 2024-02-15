@@ -1,22 +1,28 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Flex, VStack, IconButton, Text, Divider, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Button, Select, Spinner } from '@chakra-ui/react';
+import { Box, Flex, VStack, IconButton, Text, Divider, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Button, Select, Spinner, useColorModeValue } from '@chakra-ui/react';
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import SchedulePopup from '@/components/SchedulePopup';
 import EditSchedulePopup from '@/components/EditSchedulePopup';
 import { newSchedule, updateSchedule, deleteSchedule, fetchSchedulesWithMembers } from '@/lib/supabase';
 import { Schedule } from '@/lib/types';
-import { formatScheduleTime } from '../../utils/format';
 import { useToast } from '@chakra-ui/react';
 import { Member } from '@/lib/types';
 import { WarningTwoIcon } from '@chakra-ui/icons';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
+import { FaBook } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 const Schedule = () => {
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
+
+    const router = useRouter();
+    // const navigateToTasks = () => {
+    //     router.push('/tasks');
+    // };
 
     const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setCurrentYear(parseInt(event.target.value));
@@ -58,7 +64,6 @@ const Schedule = () => {
     };
 
     const openEditPopup = (schedule: Schedule) => {
-        console.log(schedule);
         setEditSchedule(schedule);
         setIsEditPopupOpen(true);
     };
@@ -170,11 +175,19 @@ const Schedule = () => {
                                 <option key={year} value={year}>{year}年</option>
                             ))}
                         </Select>
-                        <Select onChange={handleMonthChange} value={currentMonth} ml={2}>
+                        <Select onChange={handleMonthChange} value={currentMonth} mx={2}>
                             {createMonthOptions().map(month => (
                                 <option key={month} value={month}>{month}月</option>
                             ))}
                         </Select>
+                        <IconButton
+                            icon={<FaBook />}
+                            aria-label="課題一覧"
+                            onClick={() => { router.push('/task'); }}
+                            background="transparent"
+                            color={useColorModeValue('orange.300', 'orange.200')}
+                            _hover={{ bg: "transparent" }}
+                        />
                         <IconButton
                             icon={<AddIcon />}
                             aria-label="スケジュール追加"

@@ -13,3 +13,8 @@ export interface Member {
     name: string;
     gender: number;
 }
+
+export interface Task {
+    id: number;
+    content: string;
+}
