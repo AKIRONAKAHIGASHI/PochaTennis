@@ -134,7 +134,7 @@ const Task = () => {
 
     return (
         <div className="polymorphic">
-            <VStack spacing={4} align="stretch" bg="orange.100" overflowY="auto" minH="100vh">
+            <VStack spacing={4} align="stretch" bg="orange.100" overflowY="auto" h="100dvh">
                 <Box p={5}
                     m={5}
                     shadow="md"
@@ -153,7 +153,7 @@ const Task = () => {
                                 <option value="0">全員</option>
                                 <option value="1">すず</option>
                                 <option value="2">まり</option>
-                                <option value="3">あき</option>
+                                <option value="3">あきろー</option>
                             </Select>
                             <IconButton
                                 icon={<CalendarIcon />}
