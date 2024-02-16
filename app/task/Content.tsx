@@ -134,7 +134,7 @@ const Task = () => {
 
     return (
         <div className="polymorphic">
-            <VStack spacing={4} align="stretch" bg="orange.100" overflowY="auto" h="100vh">
+            <VStack spacing={4} align="stretch" bg="orange.100" overflowY="auto" minH="100vh">
                 <Box p={5}
                     m={5}
                     shadow="md"
