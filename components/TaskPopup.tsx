@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, FormControl, FormLabel, FormErrorMessage, ModalFooter, Button, useDisclosure, Divider, Textarea } from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, FormControl, FormLabel, FormErrorMessage, ModalFooter, Button, useDisclosure, Divider, Textarea, Select } from '@chakra-ui/react';
 import { useToast } from '@chakra-ui/react';
 
 interface TaskPopupProps {
     onClose: () => void;
-    onSave: (remarks: string) => void;
+    onSave: (type: number, content: string) => void;
 };
 
 const TaskPopup: React.FC<TaskPopupProps> = ({ onClose, onSave }) => {
     const [contentError, setContentError] = useState('');
     const initialRef = useRef(null);
+    const [type, setType] = useState<number>(0);
     const [content, setContent] = useState('');
     const toast = useToast();
 
@@ -21,7 +22,7 @@ const TaskPopup: React.FC<TaskPopupProps> = ({ onClose, onSave }) => {
         setContentError('');
 
         try {
-            await onSave(content);
+            await onSave(type, content);
             toast({
                 title: '保存成功',
                 description: '課題がデータベースに保存されました。',
@@ -52,6 +53,19 @@ const TaskPopup: React.FC<TaskPopupProps> = ({ onClose, onSave }) => {
                 <Divider />
                 <ModalCloseButton />
                 <ModalBody maxHeight="60vh" overflowY="auto">
+                    <FormControl mt={4}>
+                        <FormLabel>ターゲット</FormLabel>
+                        <Select
+                            placeholder="タイプを選択"
+                            value={type}
+                            onChange={(e) => setType(Number(e.target.value))}
+                        >
+                            <option value={0}>全体</option>
+                            <option value={1}>すず</option>
+                            <option value={2}>まり</option>
+                            <option value={3}>あきろー</option>
+                        </Select>
+                    </FormControl>
                     <FormControl isInvalid={!!contentError} mt={4}>
                         <FormLabel>課題</FormLabel>
                         <Textarea

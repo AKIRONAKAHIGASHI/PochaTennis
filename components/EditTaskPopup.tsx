@@ -10,7 +10,7 @@ import {
   FormLabel,
   ModalFooter,
   Button,
-  Divider, Textarea
+  Divider, Textarea, Select
 } from '@chakra-ui/react';
 import { Task } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
@@ -18,11 +18,12 @@ import { useToast } from '@chakra-ui/react';
 interface EditTaskPopupProps {
   onClose: () => void;
   task: Task | undefined;
-  onSave: (taskId: number, task: string) => void;
+  onSave: (taskId: number, type: number, task: string) => void;
 }
 
 const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave }) => {
   const [content, setContent] = useState(task?.content || '');
+  const [type, setType] = useState<number>(task?.type || 0);
 
   const toast = useToast();
   const initialRef = useRef(null);
@@ -33,7 +34,7 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave }) 
 
   const handleSave = () => {
     if (task) {
-      onSave(task.id, content);
+      onSave(task.id, type, content);
       onClose();
       toast({
         title: '完了',
@@ -55,7 +56,20 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave }) 
         <ModalCloseButton />
         <ModalBody ref={modalBodyRef} maxHeight="60vh" overflowY="auto">
           <FormControl mt={4}>
-            <FormLabel>課題</FormLabel>
+            <FormLabel>ターゲット</FormLabel>
+            <Select
+              placeholder="タイプを選択"
+              value={type}
+              onChange={(e) => setType(Number(e.target.value))}
+            >
+              <option value={0}>全体</option>
+              <option value={1}>すず</option>
+              <option value={2}>まり</option>
+              <option value={3}>あきろー</option>
+            </Select>
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>内容</FormLabel>
             <Textarea
               placeholder="課題を入力"
               value={content}

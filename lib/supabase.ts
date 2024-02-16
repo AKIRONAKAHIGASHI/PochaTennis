@@ -25,12 +25,14 @@ export const fetchTasks = async (): Promise<Task[] | null> => {
 };
 
 export const newTask = async (
+  type: number,
   content: string
 ): Promise<void> => {
   const { data, error: taskError } = (await supabase
     .from('t_task')
     .insert([{
-      content
+      type,
+      content: content
     }])
     .single());
 
@@ -40,12 +42,14 @@ export const newTask = async (
 
 export const updateTask = async (
   taskId: number,
+  type: number,
   content: string
 ) => {
   const { error: taskError } = await supabase
     .from('t_task')
     .update({
-      content: content
+      type,
+      content
     })
     .eq('id', taskId);
 

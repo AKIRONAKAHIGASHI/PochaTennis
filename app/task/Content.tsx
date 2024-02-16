@@ -33,8 +33,8 @@ const Task = () => {
         setIsNewOpenPopup(true);
     }
 
-    const handleSaveNew = async (content: string) => {
-        await newTask(content);
+    const handleSaveNew = async (type: number, content: string) => {
+        await newTask(type, content);
         fetchTasks().then(setTasks);
         setIsNewOpenPopup(false);
     };
@@ -44,8 +44,8 @@ const Task = () => {
         setIsEditPopupOpen(true);
     };
 
-    const handleSaveEdit = async (taskId: number, content: string) => {
-        await updateTask(taskId, content);
+    const handleSaveEdit = async (taskId: number, type: number, content: string) => {
+        await updateTask(taskId, type, content);
         fetchTasks().then(setTasks);
     };
 
@@ -80,16 +80,21 @@ const Task = () => {
         }
     };
 
-    // const getLabelColor = (eventType: number) => {
-    //     switch (eventType) {
-    //         case 1: // レンタル
-    //             return "green.500";
-    //         case 2: // 試合
-    //             return "orange.500";
-    //         default:
-    //             return "gray.500";
-    //     }
-    // };
+    const getTypeName = (type: number) => {
+        switch (type) {
+            case 0:
+                return "全体";
+            case 1:
+                return "すず";
+            case 2:
+                return "まり";
+            case 3:
+                return "あきろー";
+            default:
+                return "不明";
+        }
+    };
+
 
 
     useEffect(() => {
@@ -165,6 +170,7 @@ const Task = () => {
                                         <Box width="8px" height="100%" bg={'orange'} position="absolute" left={0} top={0} borderRadius="lg" />
                                         <Flex justifyContent="space-between">
                                             <Box mb={4} _hover={{ cursor: "pointer" }} onClick={() => openEditPopup(task)} pl={5}>
+                                                <Text fontSize="sm" color="gray.500">{getTypeName(task.type)}</Text>
                                                 <Text fontWeight="bold">{task.content}</Text>
                                             </Box>
 

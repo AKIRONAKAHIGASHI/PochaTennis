@@ -16,5 +16,6 @@ export interface Member {
 
 export interface Task {
     id: number;
+    type: number;
     content: string;
 }
