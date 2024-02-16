@@ -60,7 +60,7 @@ const TaskPopup: React.FC<TaskPopupProps> = ({ onClose, onSave }) => {
                             value={type}
                             onChange={(e) => setType(Number(e.target.value))}
                         >
-                            <option value={0}>全体</option>
+                            <option value={0}>全員</option>
                             <option value={1}>すず</option>
                             <option value={2}>まり</option>
                             <option value={3}>あきろー</option>

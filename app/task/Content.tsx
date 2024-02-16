@@ -27,6 +27,7 @@ const Task = () => {
 
 
     const toast = useToast();
+    const [filterType, setFilterType] = useState('0');
 
 
     const openPopup = () => {
@@ -98,7 +99,7 @@ const Task = () => {
     const getTypeName = (type: number) => {
         switch (type) {
             case 0:
-                return "全体";
+                return "全員";
             case 1:
                 return "すず";
             case 2:
@@ -113,11 +114,12 @@ const Task = () => {
 
 
     useEffect(() => {
-        const fetchTask = async () => {
+        const fetchTask = async (filterType: string) => {
             setIsLoading(true);
             try {
-                const loadedtasks = await fetchTasks();
-                setTasks(loadedtasks);
+                const loadedtasks = await fetchTasks() || [];
+                const filteredTasks = filterType === '0' ? loadedtasks : loadedtasks?.filter(task => task.type.toString() === filterType);
+                setTasks(filteredTasks);
             } catch (error) {
                 console.error("課題の取得に失敗しました", error);
                 setTasks(null);
@@ -127,8 +129,8 @@ const Task = () => {
         };
 
 
-        fetchTask();
-    }, []);
+        fetchTask(filterType);
+    }, [filterType]);
 
     return (
         <div className="polymorphic">
@@ -147,6 +149,12 @@ const Task = () => {
                             課題一覧
                         </Text>
                         <Flex>
+                            <Select onChange={(e) => setFilterType(e.target.value)} value={filterType} width="auto" marginRight="2">
+                                <option value="0">全員</option>
+                                <option value="1">すず</option>
+                                <option value="2">まり</option>
+                                <option value="3">あき</option>
+                            </Select>
                             <IconButton
                                 icon={<CalendarIcon />}
                                 aria-label="スケジュール一覧"
