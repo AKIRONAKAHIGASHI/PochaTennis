@@ -80,6 +80,21 @@ const Task = () => {
         }
     };
 
+    const getLabelColor = (type: number) => {
+        switch (type) {
+            case 0:
+                return "gray.200";
+            case 1:
+                return "green.200";
+            case 2:
+                return "purple.200";
+            case 3:
+                return "blue.200";
+            default:
+                return "gray.200";
+        }
+    };
+
     const getTypeName = (type: number) => {
         switch (type) {
             case 0:
@@ -167,7 +182,7 @@ const Task = () => {
                             {tasks?.map((task, index) => (
                                 <Box key={index}>
                                     <Box borderRadius="lg" p={4} position="relative" bg="gray.50" shadow="sm">
-                                        <Box width="8px" height="100%" bg={'orange'} position="absolute" left={0} top={0} borderRadius="lg" />
+                                        <Box width="8px" height="100%" bg={getLabelColor(task.type)} position="absolute" left={0} top={0} borderRadius="lg" />
                                         <Flex justifyContent="space-between">
                                             <Box mb={4} _hover={{ cursor: "pointer" }} onClick={() => openEditPopup(task)} pl={5}>
                                                 <Text fontSize="sm" color="gray.500">{getTypeName(task.type)}</Text>
