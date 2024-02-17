@@ -16,12 +16,26 @@ export const fetchTasks = async (): Promise<Task[] | null> => {
     .select('*')
     .order('id', { ascending: true });
 
-  if (error) {
+  if (error || !tasks) {
     console.error('Error fetching tasks', error);
     return null;
   }
 
-  return tasks;
+  const tasksWithComments = await Promise.all(tasks.map(async (task) => {
+    let { data: comments, error: commentsError } = await supabase
+      .from('t_task_comment')
+      .select('id, task_id, content')
+      .eq('task_id', task.id); // task_idが一致するコメントのみを取得
+
+    if (commentsError) {
+      console.error(`Error fetching comments for task ${task.id}`, commentsError);
+      return task; // エラーがあれば、コメントなしでタスクを返す
+    }
+
+    return { ...task, comments: comments || [] }; // タスクオブジェクトにコメント配列をマージして返す
+  }));
+
+  return tasksWithComments;
 };
 
 export const newTask = async (
@@ -71,6 +85,18 @@ export const deleteTask = async (taskId: number) => {
   }
 
   return data;
+};
+
+export const updateTaskComment = async (taskId: number, content: string): Promise<void> => {
+  const { data, error: taskCommentError } = (await supabase
+    .from('t_task_comment')
+    .insert([{
+      task_id: taskId,
+      content
+    }])
+    .single());
+
+  if (taskCommentError) throw taskCommentError;
 };
 
 

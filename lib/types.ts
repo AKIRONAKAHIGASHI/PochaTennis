@@ -18,4 +18,11 @@ export interface Task {
     id: number;
     type: number;
     content: string;
+    comments: Comment[];
+}
+
+export interface Comment {
+    id: number;
+    task_id?: number;
+    content: string;
 }

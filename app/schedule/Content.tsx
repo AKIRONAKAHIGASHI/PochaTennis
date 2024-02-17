@@ -130,14 +130,11 @@ const Schedule = () => {
 
     function formatScheduleWithWeekday(start: Date, end: Date) {
 
-        // 日付と曜日、時間をフォーマット
         const formattedStartDate = format(start, 'M/d(E) HH:mm', { locale: ja });
         const formattedEndTime = format(end, 'HH:mm', { locale: ja });
 
         return `${formattedStartDate} - ${formattedEndTime}`;
     }
-
-
 
     useEffect(() => {
         const fetchSchedules = async () => {
@@ -159,7 +156,7 @@ const Schedule = () => {
 
     return (
         <div className="polymorphic">
-            <VStack spacing={4} align="stretch" bg="grass.100" overflowY="auto" h="100vh">
+            <VStack spacing={4} align="stretch" bg="grass.100" overflowY="auto" h="100dvh">
                 <Box p={5}
                     m={5}
                     shadow="md"

@@ -1,11 +1,11 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Flex, VStack, IconButton, Text, Divider, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Button, Select, Spinner, useColorModeValue } from '@chakra-ui/react';
-import { AddIcon, DeleteIcon, CalendarIcon } from '@chakra-ui/icons';
+import { Box, Flex, VStack, IconButton, Text, Divider, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Button, Select, Spinner, useColorModeValue, Icon } from '@chakra-ui/react';
+import { AddIcon, DeleteIcon, CalendarIcon, ChatIcon } from '@chakra-ui/icons';
 import TaskPopup from '@/components/TaskPopup';
 import EditTaskPopup from '@/components/EditTaskPopup';
-import { newTask, updateTask, deleteTask, fetchTasks } from '@/lib/supabase';
+import { newTask, updateTask, deleteTask, fetchTasks, updateTaskComment } from '@/lib/supabase';
 import { Task } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
@@ -49,6 +49,11 @@ const Task = () => {
         await updateTask(taskId, type, content);
         fetchTasks().then(setTasks);
     };
+
+    const handleSaveEditComment = async (taskId: number, content: string) => {
+        await updateTaskComment(taskId, content);
+
+    }
 
 
     const openDeleteDialog = (id: number) => {
@@ -196,9 +201,13 @@ const Task = () => {
                                                 <Text fontSize="sm" color="gray.500">{getTypeName(task.type)}</Text>
                                                 <Text fontWeight="bold">{task.content}</Text>
                                             </Box>
+                                            <Flex ml={4} alignItems="center">
+                                                <Icon as={ChatIcon} mr={2} />
+                                                <Text>{task.comments?.length || 0}</Text>
+                                            </Flex>
 
 
-                                            <IconButton
+                                            {/* <IconButton
                                                 aria-label="削除"
                                                 icon={<DeleteIcon />}
                                                 onClick={() => openDeleteDialog(task.id)}
@@ -206,7 +215,7 @@ const Task = () => {
                                                 background="transparent"
                                                 color="red.500"
                                                 _hover={{ bg: "gray.100" }}
-                                            />
+                                            /> */}
                                         </Flex>
                                     </Box>
 
@@ -223,11 +232,12 @@ const Task = () => {
                     onClose={() => setIsNewOpenPopup(false)}
                     onSave={handleSaveNew}
                 />}
-            {isEditPopupOpen &&
+            {isEditPopupOpen && editTask &&
                 <EditTaskPopup
                     onClose={() => setIsEditPopupOpen(false)}
                     task={editTask}
                     onSave={handleSaveEdit}
+                    saveComment={handleSaveEditComment}
                 />
             }
             <AlertDialog

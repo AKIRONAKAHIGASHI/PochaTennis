@@ -46,9 +46,9 @@ const TaskPopup: React.FC<TaskPopupProps> = ({ onClose, onSave }) => {
     };
 
     return (
-        <Modal isOpen={true} onClose={onClose} size="xl" initialFocusRef={initialRef}>
+        <Modal isOpen={true} onClose={onClose} size="full" initialFocusRef={initialRef}>
             <ModalOverlay />
-            <ModalContent my={10} mx={5}>
+            <ModalContent>
                 <ModalHeader ref={initialRef} >課題を追加</ModalHeader>
                 <Divider />
                 <ModalCloseButton />
