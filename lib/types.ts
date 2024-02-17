@@ -22,7 +22,7 @@ export interface Task {
 }
 
 export interface Comment {
-    id: number;
+    id?: number;
     task_id?: number;
     content: string;
 }

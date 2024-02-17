@@ -33,8 +33,12 @@ interface EditTaskPopupProps {
 const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave, saveComment }) => {
   const [content, setContent] = useState(task?.content || '');
   const [type, setType] = useState<number>(task?.type || 0);
+  // 既存のコメント
   const [comments, setComments] = useState<Comment[]>(task?.comments || []);
+  // 新しいコメントを入力
   const [newComment, setNewComment] = useState('');
+  // 新しいコメントのリスト
+  const [newComments, setNewComments] = useState<{ content: string; }[]>([]);
 
   const toast = useToast();
   const initialRef = useRef(null);
@@ -42,16 +46,21 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave, sa
   const modalBodyRef = useRef<HTMLDivElement>(null);
 
   const handleAddComment = () => {
-    // 新しいコメントが入力されていない場合は何もしない
     if (!newComment.trim()) return;
 
-    // 新しいコメントをコメントリストに追加
-    const updatedComments = [...comments, { content: newComment, id: task.id }]; // idは例としてDate.now()を使用していますが、実際にはデータベースから取得した値を使用してください
-    setComments(updatedComments);
+    // 新しいコメントオブジェクトを作成
+    const newCommentObj = { content: newComment, id: Date.now() }; // idは一時的なものとして扱う
+
+    // 新しいコメントを表示用のリストに追加
+    setComments(prevComments => [...prevComments, newCommentObj]);
+
+    // 新しいコメントを保存用のリストに追加
+    setNewComments(prevNewComments => [...prevNewComments, { content: newComment }]);
 
     // 入力フィールドをクリア
     setNewComment('');
   };
+
 
   const handleSave = async () => {
     if (task && content.trim() !== '') {
@@ -59,12 +68,10 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave, sa
         // タスクの内容とターゲットタイプを保存
         await onSave(task.id, type, content);
 
-        // コメントが存在する場合、それらも保存
-        if (comments.length > 0) {
-          for (let comment of comments) {
-            await saveComment(task.id, comment.content);
-          }
+        for (const newComment of newComments) {
+          await saveComment(task.id, newComment.content);
         }
+
 
         // 保存成功の通知
         toast({
