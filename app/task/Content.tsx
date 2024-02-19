@@ -5,7 +5,7 @@ import { Box, Flex, VStack, IconButton, Text, Divider, AlertDialog, AlertDialogB
 import { AddIcon, DeleteIcon, CalendarIcon, ChatIcon } from '@chakra-ui/icons';
 import TaskPopup from '@/components/TaskPopup';
 import EditTaskPopup from '@/components/EditTaskPopup';
-import { newTask, updateTask, deleteTask, fetchTasks, updateTaskComment } from '@/lib/supabase';
+import { newTask, updateTask, deleteTask, fetchTasks, updateTaskComment, deleteTaskComment } from '@/lib/supabase';
 import { Task } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
@@ -52,13 +52,26 @@ const Task = () => {
 
     const handleSaveEditComment = async (taskId: number, content: string) => {
         await updateTaskComment(taskId, content);
+        fetchTasks().then(setTasks);
+    };
 
-    }
-
-
-    const openDeleteDialog = (id: number) => {
-        setDeleteTaskId(id);
-        setDeleteDialogIsOpen(true);
+    const handleDeleteComment = async (taskId: number, deleteCommentId: number | undefined) => {
+        if (deleteCommentId) {
+            try {
+                await deleteTaskComment(taskId, deleteCommentId);
+                fetchTasks().then(setTasks);
+                toast({
+                    title: '完了',
+                    description: 'コメントが削除されました。',
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                    position: 'top',
+                });
+            } catch (error) {
+                console.error('削除エラー:', error);
+            }
+        }
     };
 
     const closeDeleteDialog = () => {
@@ -238,6 +251,7 @@ const Task = () => {
                     task={editTask}
                     onSave={handleSaveEdit}
                     saveComment={handleSaveEditComment}
+                    deleteComment={handleDeleteComment}
                 />
             }
             <AlertDialog

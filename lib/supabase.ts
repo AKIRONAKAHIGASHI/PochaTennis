@@ -14,7 +14,7 @@ export const fetchTasks = async (): Promise<Task[] | null> => {
   let { data: tasks, error } = await supabase
     .from('t_task')
     .select('*')
-    .order('id', { ascending: true });
+    .order('id', { ascending: false });
 
   if (error || !tasks) {
     console.error('Error fetching tasks', error);
@@ -97,6 +97,20 @@ export const updateTaskComment = async (taskId: number, content: string): Promis
     .single());
 
   if (taskCommentError) throw taskCommentError;
+};
+
+export const deleteTaskComment = async (taskId: number, deleteCommentId: number) => {
+  const { data, error } = await supabase
+    .from('t_task_comment')
+    .delete()
+    .eq('id', deleteCommentId)
+    .eq('task_id', taskId);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
 };
 
 

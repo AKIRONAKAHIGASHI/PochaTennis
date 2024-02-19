@@ -18,19 +18,26 @@ import {
   TabPanel,
   Input,
   VStack,
-  Box
+  Box,
+  IconButton,
+  Flex,
+  Text
 } from '@chakra-ui/react';
 import { Task, Comment } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
+import { DeleteIcon } from '@chakra-ui/icons';
+import { fetchTasks, deleteTaskComment } from '@/lib/supabase';
 
 interface EditTaskPopupProps {
   onClose: () => void;
   task: Task;
   onSave: (taskId: number, type: number, task: string) => void;
   saveComment: (taskId: number, content: string) => void;
+  deleteComment: (taskId: number, deleteCommentId: number) => void;
+
 }
 
-const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave, saveComment }) => {
+const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave, saveComment, deleteComment }) => {
   const [content, setContent] = useState(task?.content || '');
   const [type, setType] = useState<number>(task?.type || 0);
   // 既存のコメント
@@ -45,19 +52,24 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave, sa
 
   const modalBodyRef = useRef<HTMLDivElement>(null);
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (!newComment.trim()) return;
 
-    // 新しいコメントオブジェクトを作成
     const newCommentObj = { content: newComment, id: Date.now() }; // idは一時的なものとして扱う
 
-    // 新しいコメントを表示用のリストに追加
     setComments(prevComments => [...prevComments, newCommentObj]);
 
-    // 新しいコメントを保存用のリストに追加
-    setNewComments(prevNewComments => [...prevNewComments, { content: newComment }]);
+    await saveComment(task.id, newComment);
 
-    // 入力フィールドをクリア
+    toast({
+      title: '完了',
+      description: 'コメントが追加されました。',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+      position: 'top',
+    });
+
     setNewComment('');
   };
 
@@ -68,15 +80,15 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave, sa
         // タスクの内容とターゲットタイプを保存
         await onSave(task.id, type, content);
 
-        for (const newComment of newComments) {
-          await saveComment(task.id, newComment.content);
-        }
+        // for (const newComment of newComments) {
+        //   await saveComment(task.id, newComment.content);
+        // }
 
 
         // 保存成功の通知
         toast({
           title: '完了',
-          description: '課題とコメントが更新されました。',
+          description: '課題が更新されました。',
           status: 'success',
           duration: 5000,
           isClosable: true,
@@ -97,6 +109,13 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave, sa
           position: 'top',
         });
       }
+    }
+  };
+
+  const handleDeleteTaskComment = async (taskId: number, deleteCommentId: number | undefined) => {
+    if (deleteCommentId) {
+      await deleteComment(taskId, deleteCommentId);
+      setComments(comments.filter(comment => comment.id !== deleteCommentId));
     }
   };
 
@@ -145,9 +164,21 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave, sa
                 <VStack spacing={4} align="stretch">
                   {comments.map((comment, index) => (
                     <Box key={index} p={4} shadow="md" borderWidth="1px" borderColor="gray.300" borderRadius="md">
-                      {comment.content}
+                      <Flex alignItems="center" justifyContent="space-between">
+                        <Text>{comment.content}</Text>
+                        <IconButton
+                          aria-label="削除"
+                          icon={<DeleteIcon />}
+                          onClick={() => handleDeleteTaskComment(task.id, comment.id)}
+                          size="sm"
+                          background="transparent"
+                          color="red.500"
+                          _hover={{ bg: "gray.100" }}
+                        />
+                      </Flex>
                     </Box>
                   ))}
+
                   <FormControl>
                     <Input
                       value={newComment}
