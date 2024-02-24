@@ -220,15 +220,6 @@ const Task = () => {
                                             </Flex>
 
 
-                                            {/* <IconButton
-                                                aria-label="削除"
-                                                icon={<DeleteIcon />}
-                                                onClick={() => openDeleteDialog(task.id)}
-                                                size="sm"
-                                                background="transparent"
-                                                color="red.500"
-                                                _hover={{ bg: "gray.100" }}
-                                            /> */}
                                         </Flex>
                                     </Box>
 

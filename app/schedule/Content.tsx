@@ -10,7 +10,7 @@ import { Schedule } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
 import { Member } from '@/lib/types';
 import { WarningTwoIcon } from '@chakra-ui/icons';
-import { format } from 'date-fns';
+import { format, isBefore, endOfDay } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { FaBook } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
@@ -136,6 +136,14 @@ const Schedule = () => {
         return `${formattedStartDate} - ${formattedEndTime}`;
     }
 
+    const getBackgroundColor = (scheduleEndTime: Date) => {
+        const now = new Date();
+        // const endTime = new Date(scheduleEndTime);
+
+        // 終了日が現在日より前であればグレー、それ以外は白
+        return isBefore(endOfDay(scheduleEndTime), now) ? "gray.200" : "gray.50";
+    };
+
     useEffect(() => {
         const fetchSchedules = async () => {
             setIsLoading(true);
@@ -210,7 +218,7 @@ const Schedule = () => {
                         <Box p={5} mx={5} mb={5} shadow="md" borderWidth="1px" borderRadius="lg" bg="whiteAlpha.700">
                             {schedules?.map((schedule, index) => (
                                 <Box key={index}>
-                                    <Box borderRadius="lg" p={4} position="relative" bg="gray.50" shadow="sm">
+                                    <Box borderRadius="lg" p={4} position="relative" bg={getBackgroundColor(schedule.end_time)} shadow="sm">
                                         {/* ラベル色を表示 */}
                                         <Box width="8px" height="100%" bg={getLabelColor(schedule.event_type)} position="absolute" left={0} top={0} borderRadius="lg" />
 
