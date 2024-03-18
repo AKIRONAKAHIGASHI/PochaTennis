@@ -175,6 +175,7 @@ const EditSchedulePopup: React.FC<EditSchedulePopupProps> = ({ onClose, schedule
               placeholder="備考を入力"
               value={remarks}
               onChange={(e) => setRemarks(e.target.value)}
+              rows={7}
             />
           </FormControl>
 
