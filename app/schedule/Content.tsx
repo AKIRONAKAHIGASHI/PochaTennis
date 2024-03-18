@@ -8,7 +8,7 @@ import EditSchedulePopup from '@/components/EditSchedulePopup';
 import { newSchedule, updateSchedule, deleteSchedule, fetchSchedulesWithMembers } from '@/lib/supabase';
 import type { Schedule } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
-import { Member } from '@/lib/types';
+import type { Member } from '@/lib/types';
 import { WarningTwoIcon } from '@chakra-ui/icons';
 import { format, isBefore, endOfDay } from 'date-fns';
 import { ja } from 'date-fns/locale';

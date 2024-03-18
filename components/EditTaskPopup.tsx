@@ -23,7 +23,7 @@ import {
   Flex,
   Text
 } from '@chakra-ui/react';
-import { Task, Comment } from '@/lib/types';
+import type { Task, Comment } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { fetchTasks, deleteTaskComment } from '@/lib/supabase';

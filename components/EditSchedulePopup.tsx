@@ -16,9 +16,9 @@ import {
   Box,
   Text, RadioGroup, Radio, Stack, Divider, Textarea
 } from '@chakra-ui/react';
-import { Schedule } from '@/lib/types';
+import type { Schedule } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
-import { Member } from '@/lib/types';
+import type { Member } from '@/lib/types';
 import { fetchMembers } from '@/lib/supabase';
 import MemberModal, { getBackgroundColor } from './MemberModal';
 import { formatTime } from '../utils/format';

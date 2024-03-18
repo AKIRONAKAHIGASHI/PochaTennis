@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, FormControl, FormLabel, FormErrorMessage, Input, ModalFooter, Button, useDisclosure, Flex, RadioGroup, Radio, Stack, Box, Text, Divider, Textarea } from '@chakra-ui/react';
 import { useToast } from '@chakra-ui/react';
 import MemberModal, { getBackgroundColor } from './MemberModal';
-import { Member } from '@/lib/types';
+import type { Member } from '@/lib/types';
 import { fetchMembers } from '@/lib/supabase';
 
 interface SchedulePopupProps {

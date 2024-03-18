@@ -6,7 +6,7 @@ import { AddIcon, DeleteIcon, CalendarIcon, ChatIcon } from '@chakra-ui/icons';
 import TaskPopup from '@/components/TaskPopup';
 import EditTaskPopup from '@/components/EditTaskPopup';
 import { newTask, updateTask, deleteTask, fetchTasks, updateTaskComment, deleteTaskComment } from '@/lib/supabase';
-import { Task } from '@/lib/types';
+import type { Task } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 
