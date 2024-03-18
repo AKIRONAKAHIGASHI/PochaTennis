@@ -6,7 +6,7 @@ import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import SchedulePopup from '@/components/SchedulePopup';
 import EditSchedulePopup from '@/components/EditSchedulePopup';
 import { newSchedule, updateSchedule, deleteSchedule, fetchSchedulesWithMembers } from '@/lib/supabase';
-import { Schedule } from '@/lib/types';
+import type { Schedule } from '@/lib/types';
 import { useToast } from '@chakra-ui/react';
 import { Member } from '@/lib/types';
 import { WarningTwoIcon } from '@chakra-ui/icons';
