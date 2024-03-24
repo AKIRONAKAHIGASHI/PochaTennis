@@ -1,31 +1,29 @@
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
+import { jwtVerify } from "jose";
 
-export function middleware(request: NextRequest, event: NextFetchEvent) {
-    // Basic認証をスキップするパス
-    if (request.nextUrl.pathname.startsWith('/api/login')) {
-        return NextResponse.next();
-    }
+export async function middleware(request: NextRequest) {
+  const token = request.cookies.get("token") || "";
 
-    const basicAuth = request.headers.get('authorization');
+  if (request.nextUrl.pathname.startsWith("/login")) {
+    return NextResponse.next();
+  }
 
-    const USERNAME = process.env.BASIC_AUTH_USER; // ここに基本認証のユーザー名を設定
-    const PASSWORD = process.env.BASIC_AUTH_PASSWORD; // ここに基本認証のパスワードを設定
+  if (request.nextUrl.pathname === "api/login") {
+    return NextResponse.next();
+  }
 
-    if (basicAuth) {
-        const auth = basicAuth.split(' ')[1];
-        const [username, password] = Buffer.from(auth, 'base64').toString().split(':');
+  if (typeof token !== "string") {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
-        if (username === USERNAME && password === PASSWORD) {
-            // 認証成功時はリクエストを許可
-            return NextResponse.next();
-        }
-    }
-
-    // 認証失敗時はBasic認証のダイアログを表示
-    return new NextResponse('認証が必要です', {
-        status: 401,
-        headers: {
-            'WWW-Authenticate': 'Basic realm="Secure Area"',
-        },
-    });
+  try {
+    const { payload } = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET_KEY));
+    return NextResponse.next();
+  } catch (error) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 }
+
+export const config = {
+  matcher: ["/", "/login/:path*", "/task/:path*", "/schedle/:path*"],
+};
