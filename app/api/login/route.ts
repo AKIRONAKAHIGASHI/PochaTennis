@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       const cookieOptions = {
         path: "/",
         httpOnly: true,
-        // sameSite: "strict",
+        sameSite: "none",
         maxAge: 604800,
         secure: true,
       };
