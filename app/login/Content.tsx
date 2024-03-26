@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import { FormControl, FormLabel, Input, Button, Box, useToast, Center, VStack, Select } from "@chakra-ui/react";
 
 const Login = () => {
-  // const [email, setEmail] = useState('');
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const toast = useToast();
 
   const login = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     try {
       const response = await fetch("/api/login", {
         method: "POST",
@@ -31,8 +31,9 @@ const Login = () => {
           title: "ログイン成功",
           description: "ログインに成功しました。",
           status: "success",
-          duration: 9000,
+          duration: 2500,
           isClosable: true,
+          position: "top",
         });
         router.push("/schedule");
       } else {
@@ -44,8 +45,9 @@ const Login = () => {
           title: "ログインエラー",
           description: error.message,
           status: "error",
-          duration: 9000,
+          duration: 2500,
           isClosable: true,
+          position: "top",
         });
       } else {
         console.error("An unexpected error occurred:", error);
@@ -60,7 +62,13 @@ const Login = () => {
           <VStack spacing={6}>
             <FormControl id="username">
               <FormLabel>ユーザ名</FormLabel>
-              <Select placeholder="選択してください" value={username} onChange={(e) => setUsername(e.target.value)} borderWidth="2px" borderColor={"green.500"}>
+              <Select
+                placeholder="選択してください"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                borderWidth="2px"
+                borderColor={"green.500"}
+              >
                 <option value="1">すず</option>
                 <option value="2">まり</option>
                 <option value="3">あき</option>

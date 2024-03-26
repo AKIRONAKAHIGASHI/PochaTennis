@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get("token") || "";
+  const token = request.cookies.get("pocha-token")?.value || "";
 
   if (request.nextUrl.pathname.startsWith("/login")) {
     return NextResponse.next();
@@ -10,10 +10,6 @@ export async function middleware(request: NextRequest) {
 
   if (request.nextUrl.pathname === "api/login") {
     return NextResponse.next();
-  }
-
-  if (typeof token !== "string") {
-    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   try {
@@ -25,5 +21,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/login/:path*", "/task/:path*", "/schedle/:path*"],
+  matcher: ["/", "/login/:path*", "/task/:path*", "/schedule/:path*"],
 };
