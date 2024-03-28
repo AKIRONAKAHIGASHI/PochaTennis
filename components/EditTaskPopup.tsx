@@ -1,5 +1,30 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, ModalFooter, Button, Divider, Textarea, Select, Tabs, TabList, TabPanels, Tab, TabPanel, Input, VStack, Box, IconButton, Flex, Text } from "@chakra-ui/react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  FormControl,
+  FormLabel,
+  ModalFooter,
+  Button,
+  Divider,
+  Textarea,
+  Select,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Input,
+  VStack,
+  Box,
+  IconButton,
+  Flex,
+  Text,
+} from "@chakra-ui/react";
 import type { Task, Comment } from "@/lib/types";
 import { useToast } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -130,7 +155,15 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({ onClose, task, onSave, sa
                     <Box key={index} p={4} shadow="md" borderWidth="1px" borderColor="gray.300" borderRadius="md">
                       <Flex alignItems="center" justifyContent="space-between">
                         <Text>{comment.content}</Text>
-                        <IconButton aria-label="削除" icon={<DeleteIcon />} onClick={() => handleDeleteTaskComment(task.id, comment.id)} size="sm" background="transparent" color="red.500" _hover={{ bg: "gray.100" }} />
+                        <IconButton
+                          aria-label="削除"
+                          icon={<DeleteIcon />}
+                          onClick={() => handleDeleteTaskComment(task.id, comment.id)}
+                          size="sm"
+                          background="transparent"
+                          color="red.500"
+                          _hover={{ bg: "gray.100" }}
+                        />
                       </Flex>
                     </Box>
                   ))}

@@ -1,17 +1,35 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Box, Flex, VStack, IconButton, Text, Divider, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Button, Select, Spinner, useColorModeValue, Icon } from '@chakra-ui/react';
-import { AddIcon, DeleteIcon, CalendarIcon, ChatIcon } from '@chakra-ui/icons';
-import TaskPopup from '@/components/TaskPopup';
-import EditTaskPopup from '@/components/EditTaskPopup';
-import { newTask, updateTask, deleteTask, fetchTasks, updateTaskComment, deleteTaskComment } from '@/lib/supabase';
-import type { Task } from '@/lib/types';
-import { useToast } from '@chakra-ui/react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useRef } from "react";
+import {
+    Box,
+    Flex,
+    VStack,
+    IconButton,
+    Text,
+    Divider,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
+    Button,
+    Select,
+    Spinner,
+    useColorModeValue,
+    Icon,
+} from "@chakra-ui/react";
+import { AddIcon, DeleteIcon, CalendarIcon, ChatIcon } from "@chakra-ui/icons";
+import TaskPopup from "@/components/TaskPopup";
+import EditTaskPopup from "@/components/EditTaskPopup";
+import { newTask, updateTask, deleteTask, fetchTasks, updateTaskComment, deleteTaskComment } from "@/lib/supabase";
+import type { Task } from "@/lib/types";
+import { useToast } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
+import { FaVideo } from "react-icons/fa";
 
 const Task = () => {
-
     const router = useRouter();
 
     const [tasks, setTasks] = useState<Task[] | null>([]);
@@ -25,14 +43,12 @@ const Task = () => {
     const cancelRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
 
-
     const toast = useToast();
-    const [filterType, setFilterType] = useState('0');
-
+    const [filterType, setFilterType] = useState("0");
 
     const openPopup = () => {
         setIsNewOpenPopup(true);
-    }
+    };
 
     const handleSaveNew = async (type: number, content: string) => {
         await newTask(type, content);
@@ -61,15 +77,15 @@ const Task = () => {
                 await deleteTaskComment(taskId, deleteCommentId);
                 fetchTasks().then(setTasks);
                 toast({
-                    title: '完了',
-                    description: 'コメントが削除されました。',
-                    status: 'success',
+                    title: "完了",
+                    description: "コメントが削除されました。",
+                    status: "success",
                     duration: 5000,
                     isClosable: true,
-                    position: 'top',
+                    position: "top",
                 });
             } catch (error) {
-                console.error('削除エラー:', error);
+                console.error("削除エラー:", error);
             }
         }
     };
@@ -86,15 +102,15 @@ const Task = () => {
                 fetchTasks().then(setTasks);
                 closeDeleteDialog();
                 toast({
-                    title: '完了',
-                    description: '課題が削除されました。',
-                    status: 'success',
+                    title: "完了",
+                    description: "課題が削除されました。",
+                    status: "success",
                     duration: 5000,
                     isClosable: true,
-                    position: 'top',
+                    position: "top",
                 });
             } catch (error) {
-                console.error('削除エラー:', error);
+                console.error("削除エラー:", error);
             }
         }
     };
@@ -129,14 +145,12 @@ const Task = () => {
         }
     };
 
-
-
     useEffect(() => {
         const fetchTask = async (filterType: string) => {
             setIsLoading(true);
             try {
-                const loadedtasks = await fetchTasks() || [];
-                const filteredTasks = filterType === '0' ? loadedtasks : loadedtasks?.filter(task => task.type.toString() === filterType);
+                const loadedtasks = (await fetchTasks()) || [];
+                const filteredTasks = filterType === "0" ? loadedtasks : loadedtasks?.filter((task) => task.type.toString() === filterType);
                 setTasks(filteredTasks);
             } catch (error) {
                 console.error("課題の取得に失敗しました", error);
@@ -146,26 +160,15 @@ const Task = () => {
             }
         };
 
-
         fetchTask(filterType);
     }, [filterType]);
 
     return (
         <div className="polymorphic">
             <VStack spacing={4} align="stretch" bg="orange.100" overflowY="auto" h="100dvh">
-                <Box p={5}
-                    m={5}
-                    shadow="md"
-                    borderWidth="1px"
-                    borderRadius="lg"
-                    bg="whiteAlpha.900"
-                    position="sticky"
-                    top="25"
-                    zIndex="sticky">
+                <Box p={5} m={5} shadow="md" borderWidth="1px" borderRadius="lg" bg="whiteAlpha.900" position="sticky" top="25" zIndex="sticky">
                     <Flex justifyContent="space-between" alignItems="center">
-                        <Text>
-                            課題一覧
-                        </Text>
+                        <Text>課題一覧</Text>
                         <Flex>
                             <Select onChange={(e) => setFilterType(e.target.value)} value={filterType} width="auto" marginRight="2">
                                 <option value="0">全員</option>
@@ -176,9 +179,21 @@ const Task = () => {
                             <IconButton
                                 icon={<CalendarIcon />}
                                 aria-label="スケジュール一覧"
-                                onClick={() => { router.push('/schedule'); }}
+                                onClick={() => {
+                                    router.push("/schedule");
+                                }}
                                 background="transparent"
-                                color={useColorModeValue('green.300', 'green.200')}
+                                color={useColorModeValue("green.300", "green.200")}
+                                _hover={{ bg: "transparent" }}
+                            />
+                            <IconButton
+                                icon={<FaVideo />}
+                                aria-label="動画一覧"
+                                onClick={() => {
+                                    router.push("/movie");
+                                }}
+                                background="transparent"
+                                color={useColorModeValue("red.500", "red.200")}
                                 _hover={{ bg: "transparent" }}
                             />
                             <IconButton
@@ -196,11 +211,11 @@ const Task = () => {
                     <Flex justify="center" align="center" minHeight="50vh">
                         <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
                     </Flex>
-
-
                 ) : tasks?.length === 0 ? (
                     <Box textAlign="center" p={5}>
-                        <Text fontSize="lg" color="gray.600">課題がありません。</Text>
+                        <Text fontSize="lg" color="gray.600">
+                            課題がありません。
+                        </Text>
                     </Box>
                 ) : (
                     <VStack spacing={4} align="stretch" w="100%" minHeight="100vh">
@@ -208,18 +223,26 @@ const Task = () => {
                             {tasks?.map((task, index) => (
                                 <Box key={index}>
                                     <Box borderRadius="lg" p={4} position="relative" bg="gray.50" shadow="sm">
-                                        <Box width="8px" height="100%" bg={getLabelColor(task.type)} position="absolute" left={0} top={0} borderRadius="lg" />
+                                        <Box
+                                            width="8px"
+                                            height="100%"
+                                            bg={getLabelColor(task.type)}
+                                            position="absolute"
+                                            left={0}
+                                            top={0}
+                                            borderRadius="lg"
+                                        />
                                         <Flex justifyContent="space-between">
                                             <Box mb={4} _hover={{ cursor: "pointer" }} onClick={() => openEditPopup(task)} pl={5}>
-                                                <Text fontSize="sm" color="gray.500">{getTypeName(task.type)}</Text>
+                                                <Text fontSize="sm" color="gray.500">
+                                                    {getTypeName(task.type)}
+                                                </Text>
                                                 <Text fontWeight="bold">{task.content}</Text>
                                             </Box>
                                             <Flex ml={4} alignItems="center">
                                                 <Icon as={ChatIcon} mr={2} />
                                                 <Text>{task.comments?.length || 0}</Text>
                                             </Flex>
-
-
                                         </Flex>
                                     </Box>
 
@@ -227,16 +250,11 @@ const Task = () => {
                                 </Box>
                             ))}
                         </Box>
-
                     </VStack>
                 )}
             </VStack>
-            {isNewOpenPopup &&
-                <TaskPopup
-                    onClose={() => setIsNewOpenPopup(false)}
-                    onSave={handleSaveNew}
-                />}
-            {isEditPopupOpen && editTask &&
+            {isNewOpenPopup && <TaskPopup onClose={() => setIsNewOpenPopup(false)} onSave={handleSaveNew} />}
+            {isEditPopupOpen && editTask && (
                 <EditTaskPopup
                     onClose={() => setIsEditPopupOpen(false)}
                     task={editTask}
@@ -244,20 +262,14 @@ const Task = () => {
                     saveComment={handleSaveEditComment}
                     deleteComment={handleDeleteComment}
                 />
-            }
-            <AlertDialog
-                isOpen={deleteDialogIsOpen}
-                leastDestructiveRef={cancelRef}
-                onClose={closeDeleteDialog}
-            >
+            )}
+            <AlertDialog isOpen={deleteDialogIsOpen} leastDestructiveRef={cancelRef} onClose={closeDeleteDialog}>
                 <AlertDialogOverlay bg="blackAlpha.600">
                     <AlertDialogContent>
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
                             削除
                         </AlertDialogHeader>
-                        <AlertDialogBody>
-                            この課題を削除してもよろしいですか？
-                        </AlertDialogBody>
+                        <AlertDialogBody>この課題を削除してもよろしいですか？</AlertDialogBody>
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={closeDeleteDialog}>
                                 キャンセル
